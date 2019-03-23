@@ -2,12 +2,12 @@ package urlshortener.urlshortener.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import urlshortener.urlshortener.models.LongURL;
-import urlshortener.urlshortener.models.ShortURL;
-import urlshortener.urlshortener.repositories.LongURLRepository;
+import urlshortener.urlshortener.models.IDConverter;
+import urlshortener.urlshortener.models.UrlManager;
+import urlshortener.urlshortener.repositories.UrlManagerRepository;
+
 
 import java.util.List;
-//import urlshortener.urlshortener.repositories.ShortURLRepository;
 
 @Service
 public class UrlService {
@@ -15,31 +15,35 @@ public class UrlService {
     private static String host = "localhost:8080/";
 
     @Autowired
-    private LongURLRepository longURLRepository;
+    private UrlManagerRepository urlManagerRepository;
 
-//    @Autowired
-//    private ShortURLRepository shortURLRepository;
-
-    public List<LongURL> getAll(){
-        return longURLRepository.findAll();
+    public List<UrlManager> getAll(){
+        return urlManagerRepository.findAll();
     }
 
-//    private String getShortUrl(String url){
-//        LongURL longURL = longURLRepository.findByUrl(url);
-//        if(longURL == null){
-//            longURL = saveLongURL(new LongURL(url));
-//        }
-//        ShortURL shortURL = new ShortURL();
-//        return "a";
-//    }
-//
-////    private ShortURL generateShortKey(Long id){
-////
-////    }
-//
-//    public LongURL saveLongURL(LongURL longURL){
-//
-//        return longURLRepository.save(longURL);
-//    }
+    public String getShortByUrl(String url){
+
+        UrlManager urlManager = urlManagerRepository.findByUrl(url);
+
+        if(urlManager == null){
+            urlManager = saveUrlManager(new UrlManager(url));
+            urlManager.setShortened(generateShortened(urlManager.getId()));
+            saveUrlManager(urlManager);
+        }
+        return this.host + urlManager.getShortened();
+    }
+
+    public UrlManager saveUrlManager(UrlManager urlManager){
+        return urlManagerRepository.save(urlManager);
+    }
+
+    public String generateShortened(Integer id){
+
+        return IDConverter.INSTANCE.generateShortened(id);
+    }
+
+    public UrlManager getOriginalByShortened(String shortened){
+        return urlManagerRepository.findByShortened(shortened);
+    }
 
 }
