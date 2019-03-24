@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import urlshortener.urlshortener.models.UrlManager;
+import urlshortener.urlshortener.models.UrlStatistics;
 import urlshortener.urlshortener.services.UrlService;
+import urlshortener.urlshortener.services.UrlStatisticsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 
 @RestController
@@ -25,6 +28,9 @@ public class UrlController {
 
     @Autowired
     private UrlService urlService;
+
+    @Autowired
+    private UrlStatisticsService urlStatisticsService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<List<UrlManager>> findAll(HttpServletRequest request){
@@ -41,12 +47,13 @@ public class UrlController {
 
         String userAgentInfo = request.getHeader("User-Agent");
 
-        System.out.println(request.getRemoteAddr());
-        System.out.println(userAgentInfo);
-
 
         if(isValidURL(url.getUrl())){
             String shortUrl = urlService.getShortByUrl(url.getUrl());
+            //Save statistics
+            Calendar cal = Calendar.getInstance();
+            UrlStatistics urlStatistics = new UrlStatistics(userAgentInfo, request.getRemoteAddr(), cal, url.getUrl());
+            urlStatisticsService.save(urlStatistics);
 
             return new ResponseEntity<String>(shortUrl, HttpStatus.OK);
         }else{
@@ -63,12 +70,18 @@ public class UrlController {
         System.out.println(request.getRemoteAddr());
         System.out.println(userAgentInfo);
 
+        //Save statistics
+        Calendar cal = Calendar.getInstance();
+        UrlStatistics urlStatistics = new UrlStatistics(userAgentInfo, request.getRemoteAddr(), cal, shortened);
+        urlStatisticsService.save(urlStatistics);
+
         UrlManager urlManager = urlService.getOriginalByShortened(shortened);
         try {
             if(urlManager != null){
                 HttpHeaders httpHeaders = new HttpHeaders();
                 URI uri = new URI(urlManager.getUrl());
                 httpHeaders.setLocation(uri);
+
                 return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
             }else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
