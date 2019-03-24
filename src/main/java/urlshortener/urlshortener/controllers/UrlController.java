@@ -1,7 +1,6 @@
 package urlshortener.urlshortener.controllers;
 
 
-import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import urlshortener.urlshortener.services.UrlService;
 import urlshortener.urlshortener.services.UrlStatisticsService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,7 +21,6 @@ import java.util.Calendar;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/")
 public class UrlController {
 
     @Autowired

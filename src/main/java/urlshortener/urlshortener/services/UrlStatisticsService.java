@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import urlshortener.urlshortener.models.UrlStatistics;
 import urlshortener.urlshortener.repositories.UrlStatisticsRepository;
 import urlshortener.urlshortener.repositories.projections.UrlStatisticsGroupBy;
+import urlshortener.urlshortener.repositories.projections.UrlStatisticsReport;
 
 import java.util.List;
 
@@ -32,6 +33,18 @@ public class UrlStatisticsService {
 
     public List<UrlStatisticsGroupBy> getMonthVisited(){
         return urlStatisticsRepository.monthVisited();
+    }
+
+    public List<UrlStatisticsGroupBy> getUrlMostVisited(){
+        return urlStatisticsRepository.urlMostVisited();
+    }
+
+    public List<UrlStatisticsGroupBy> getShortenedMostVisited(){
+        return urlStatisticsRepository.shortenedMostVisited();
+    }
+
+    public List<UrlStatisticsReport> getUrlReport(){
+        return urlStatisticsRepository.urlReport();
     }
 
 }

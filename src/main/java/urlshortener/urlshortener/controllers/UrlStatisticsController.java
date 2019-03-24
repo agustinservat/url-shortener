@@ -6,11 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import urlshortener.urlshortener.models.UrlStatistics;
 import urlshortener.urlshortener.repositories.projections.UrlStatisticsGroupBy;
+import urlshortener.urlshortener.repositories.projections.UrlStatisticsReport;
 import urlshortener.urlshortener.services.UrlStatisticsService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -20,26 +19,44 @@ public class UrlStatisticsController {
     @Autowired
     private UrlStatisticsService urlStatisticsService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<List<UrlStatistics>> findAll(){
-        return new ResponseEntity<List<UrlStatistics>>(urlStatisticsService.getAll(), HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+//    public ResponseEntity<List<UrlStatistics>> findAll(){
+//        return new ResponseEntity<List<UrlStatistics>>(urlStatisticsService.getAll(), HttpStatus.OK);
+//    }
 
-    @RequestMapping(value = "/remote-adrr-cnt", method = RequestMethod.GET)
+    @RequestMapping(value = "/adrr-visited", method = RequestMethod.GET)
     public ResponseEntity<List<UrlStatisticsGroupBy>> getRemoteAdrrCount(){
 
         return new ResponseEntity<List<UrlStatisticsGroupBy>>(urlStatisticsService.getRemoteAdrrCount(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user-agent-cnt", method = RequestMethod.GET)
+    @RequestMapping(value = "/agent-visited", method = RequestMethod.GET)
     public ResponseEntity<List<UrlStatisticsGroupBy>> getUserAgentCount(){
 
         return new ResponseEntity<List<UrlStatisticsGroupBy>>(urlStatisticsService.getUserAgentCount(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/month-visited-cnt", method = RequestMethod.GET)
-    public ResponseEntity<List<UrlStatisticsGroupBy>> geMonthVisited(){
+    @RequestMapping(value = "/month-visited", method = RequestMethod.GET)
+    public ResponseEntity<List<UrlStatisticsGroupBy>> getMonthVisited(){
 
         return new ResponseEntity<List<UrlStatisticsGroupBy>>(urlStatisticsService.getMonthVisited(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/url-visited", method = RequestMethod.GET)
+    public ResponseEntity<List<UrlStatisticsGroupBy>> getUrlMostVisited(){
+
+        return new ResponseEntity<List<UrlStatisticsGroupBy>>(urlStatisticsService.getUrlMostVisited(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/shortened-visited", method = RequestMethod.GET)
+    public ResponseEntity<List<UrlStatisticsGroupBy>> getShortenedMostVisited(){
+
+        return new ResponseEntity<List<UrlStatisticsGroupBy>>(urlStatisticsService.getShortenedMostVisited(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/url-report", method = RequestMethod.GET)
+    public ResponseEntity<List<UrlStatisticsReport>> getUrlReport(){
+
+        return new ResponseEntity<List<UrlStatisticsReport>>(urlStatisticsService.getUrlReport(), HttpStatus.OK);
     }
 }
