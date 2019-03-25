@@ -1,16 +1,12 @@
-# Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+FROM maven:3.5-jdk-8
 
-# Add Maintainer Info
 MAINTAINER "agustinservat@gmail.com"
 
+COPY ./ ./
 
-# Make port 8080 available to the world outside this container
+RUN mvn package
+
 EXPOSE 8080
 
-# Add the application's jar to the container
-ADD target/url-shortener-0.0.1-SNAPSHOT.jar app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+CMD ["java", "-jar", "./target/url-shortener-0.0.1-SNAPSHOT.jar"]
 
