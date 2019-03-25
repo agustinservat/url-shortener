@@ -11,9 +11,6 @@ cd url-shortener
 ```
 
 ```
-mvn clean package
-```
-```
 docker run --name mysql-standalone -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=url_shortener -e MYSQL_USER=user -e MYSQL_PASSWORD=1234 -d mysql:5.6
 ```
 
